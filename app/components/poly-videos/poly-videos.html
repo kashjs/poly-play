@@ -8,19 +8,32 @@
       .video {
         display: inline-block;
       }
+      .loadmore {
+        text-align: center;
+        margin-bottom: 30px;
+      }
     </style>
-    <template repeat="{{video in videos}}">
-      <div class="video">
-        <poly-video video="{{video}}"
-                    on-video-play="{{handleVideoPlay}}"></poly-video>
-      </div>
-    </template>
+    <div id="videos-list">
+      <template repeat="{{video in videos}}">
+        <div class="video">
+          <poly-video video="{{video}}"
+                      on-video-play="{{handleVideoPlay}}"></poly-video>
+        </div>
+      </template>
+    </div>
+    <p class="loadmore">
+      <paper-button label="Load More ..."
+                    hidden?="{{!videos.length}}"
+                    on-tap="{{loadVideos}}"
+                    dismissive></paper-button>
+    </p>
   </template>
   <script>
     Polymer('poly-videos', {
       currentVideo: {},
       videos: [],
       searchTerm: '',
+      nextToken: undefined,
       ready: function () {
         var self = this;
         function initialize () {
@@ -73,9 +86,13 @@
           fields: 'items(id(videoId),snippet(title,channelTitle,thumbnails(medium))),nextPageToken',
           key: 'AIzaSyCujzgGdCJxKUEU1lJvkqwPVaE9nRMKs1I'
         }
+        if (self.nextToken) {
+          queryObject.pageToken = self.nextToken;
+        }
         var request = gapi.client.youtube.search.list(queryObject);
         request.execute(function(response) {
-          self.videos = response.items;
+          self.nextToken = response.result.nextPageToken;
+          self.videos = self.videos.concat(response.items);
         });
       }
     });
