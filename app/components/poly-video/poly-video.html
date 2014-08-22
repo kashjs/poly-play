@@ -9,10 +9,14 @@
     <style>
       .video {
         height: 100px;
-        width: 300px;
+        width: 330px;
+        cursor: default;
+      }
+      .video:hover {
+        background: rgba(0,0,0,.1);
       }
       .thumbnail {
-        width: 140px;
+        width: 170px;
         height: 100%;
         overflow: hidden;
         float: left;
@@ -38,7 +42,7 @@
     </style>
     <div class="video">
       <div class="thumbnail">
-        <img src="{{video.snippet.thumbnails.default.url}}">
+        <img src="{{video.snippet.thumbnails.medium.url}}">
       </div>
       <div class="info">
         <div class="title">

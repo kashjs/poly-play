@@ -70,7 +70,7 @@
           type: 'video',
 //          videoCategoryId: 10,
           videoEmbeddable: true,
-          fields: 'items(id(videoId),snippet(title,channelTitle,thumbnails(default))),nextPageToken',
+          fields: 'items(id(videoId),snippet(title,channelTitle,thumbnails(medium))),nextPageToken',
           key: 'AIzaSyCujzgGdCJxKUEU1lJvkqwPVaE9nRMKs1I'
         }
         var request = gapi.client.youtube.search.list(queryObject);
