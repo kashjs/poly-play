@@ -24,7 +24,7 @@
     <p class="loadmore">
       <paper-button label="Load More ..."
                     hidden?="{{!videos.length}}"
-                    on-tap="{{loadVideos}}"
+                    on-tap="{{handleLoadMore}}"
                     dismissive></paper-button>
     </p>
   </template>
@@ -72,9 +72,12 @@
         this.fire('video-changed', this.currentVideo);
       },
       searchTermChanged: _.debounce(function () {
-        this.loadVideos();
+        this.loadVideos(true);
       }, 100, false),
-      loadVideos: function () {
+      handleLoadMore: _.debounce(function () {
+        this.loadVideos();
+      }, 300, false),
+      loadVideos: function (reset) {
         var self = this;
         var queryObject = {
           q: self.searchTerm,
@@ -86,13 +89,17 @@
           fields: 'items(id(videoId),snippet(title,channelTitle,thumbnails(medium))),nextPageToken',
           key: 'AIzaSyDw5pJolqkxiAsQ6V8NeCpohdR3dRqDwWg'
         }
-        if (self.nextToken) {
+        if (self.nextToken && !reset) {
           queryObject.pageToken = self.nextToken;
         }
         var request = gapi.client.youtube.search.list(queryObject);
         request.execute(function(response) {
           self.nextToken = response.result.nextPageToken;
-          self.videos = self.videos.concat(response.items);
+          if (reset) {
+            self.videos = response.items;
+          } else {
+            self.videos = self.videos.concat(response.items);
+          }
         });
       }
     });
