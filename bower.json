@@ -1,0 +1,29 @@
+{
+  "name": "poly-play",
+  "version": "0.0.0",
+  "homepage": "https://github.com/kashyap02004/poly-play",
+  "authors": [
+    "Kashyap Patel <kashyap@adap.tv>"
+  ],
+  "description": "video search app built using Polymer",
+  "main": "index.html",
+  "keywords": [
+    "polymer",
+    "web-components"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.5",
+    "core-elements": "Polymer/core-elements#~0.3.5",
+    "paper-elements": "Polymer/paper-elements#~0.3.5",
+    "underscore": "~1.6.0",
+    "font-roboto": "Polymer/font-roboto#~0.3.5"
+  }
+}

@@ -1,0 +1,63 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+
+
+<polymer-element name="poly-video" attributes="video">
+  <template>
+    <style>
+      .video {
+        height: 100px;
+        width: 300px;
+      }
+      .thumbnail {
+        width: 140px;
+        height: 100%;
+        overflow: hidden;
+        float: left;
+      }
+      .info {
+        float: left;
+        width: 150px;
+        padding: 5px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .title {
+        height: 60px;
+        overflow: hidden;
+      }
+      .controls {
+        color: #4285f4;
+      }
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <div class="video">
+      <div class="thumbnail">
+        <img src="{{video.snippet.thumbnails.default.url}}">
+      </div>
+      <div class="info">
+        <div class="title">
+          {{video.snippet.title}}
+        </div>
+        <div class="controls">
+          <paper-button label="Play"
+                        role="button"
+                        on-tap="{{playVideo}}"></paper-button>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer('poly-video', {
+      video: {},
+      playVideo: function(event, detail, sender) {
+        this.fire('video-play');
+      }
+    });
+  </script>
+</polymer-element>

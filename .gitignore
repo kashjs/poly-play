@@ -1,0 +1,7 @@
+// ========== bower components ========== //
+app/bower_components/
+
+// ========== ide files ========== //
+.idea/
+
+// ========== other files ========== //

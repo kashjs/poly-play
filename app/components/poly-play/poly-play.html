@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog-transition.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../poly-videos/poly-videos.html">
+
+<polymer-element name="poly-play">
+  <template>
+    <style>
+      .search-container {
+        text-align: center;
+        padding: 30px;
+      }
+      .videos-container {
+        padding: 0 20px;
+      }
+      .player-container {
+        margin: 0 auto;
+        padding-top: 40px;
+      }
+      .toggle-player {
+        float: right;
+      }
+      paper-fab.blue {
+        background: #4285f4;
+        color: white;
+      }
+    </style>
+    <div class="search-container">
+      <paper-input label="Search..."
+                   on-keyup="{{handleSearchInput}}"></paper-input>
+      <paper-fab class="toggle-player mini blue"
+                 icon="fullscreen" role="button"
+                 hidden?="{{showVideo || !currentVideo.id.videoId}}"
+                 on-tap="{{showVideoDialog}}"></paper-fab>
+    </div>
+
+    <div class="videos-container">
+      <poly-videos searchTerm="{{searchTerm}}"
+                   on-video-changed="{{handleVideoChanged}}"></poly-videos>
+    </div>
+
+    <paper-dialog heading="{{currentVideo.snippet.title}}"
+                  backdrop="true"
+                  transition="paper-transition-center"
+                  opened="{{showVideo}}">
+      <div class="player-container">
+        <iframe id="player" type="text/html" width="640" height="390"
+                src="http://www.youtube.com/embed/{{currentVideo.id.videoId}}?enablejsapi=1&origin=http://example.com&autoplay=1"
+                frameborder="0"></iframe>
+      </div>
+      <paper-button label="Minimize"
+                    icon="fullscreen-exit"
+                    dismissive></paper-button>
+    </paper-dialog>
+
+  </template>
+  <script>
+    Polymer('poly-play', {
+      currentVideo: {},
+      showVideo: false,
+      searchTerm: '',
+      savedVideos: [],
+      handleVideoChanged: function (event, video, sender) {
+        this.currentVideo = video;
+        this.showVideo = true;
+      },
+      showVideoDialog: function () {
+        this.showVideo = true;
+      },
+      handleSearchInput: function (event, detail, sender) {
+        this.searchTerm = sender.value;
+      }
+    });
+  </script>
+</polymer-element>
