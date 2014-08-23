@@ -4,7 +4,6 @@
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 
 
-
 <polymer-element name="poly-video-modal" attributes="video opened" noscript>
   <template>
     <style>
@@ -12,22 +11,35 @@
         background: #4285f4;
         color: white;
       }
+
       .player-container {
         margin: 0 auto;
         padding-top: 40px;
       }
+
+      .description {
+        max-width: 640px;
+      }
+
+      p.title {
+        margin-top: 0;
+        max-width: 640px;
+      }
     </style>
-    <paper-dialog heading="{{video.snippet.title}}"
-                  backdrop="true"
+    <paper-dialog backdrop="true"
                   transition="paper-dialog-transition-center"
                   opened="{{opened}}">
-      <p>
+      <p class="title">
+        {{video.snippet.title}}
+      </p>
+
+      <p class="player-area">
         <iframe id="player" type="text/html" width="640" height="390"
                 src="http://www.youtube.com/embed/{{video.id.videoId}}?enablejsapi=1&origin=http://kashyap02004.github.io/poly-play/&autoplay=1"
                 frameborder="0"
                 allowfullscreen></iframe>
       </p>
-      <p>
+      <p class="description">
         {{video.snippet.description}}
       </p>
       <paper-fab class="mini blue"
