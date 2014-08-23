@@ -1,0 +1,44 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog-transition.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+
+
+<polymer-element name="poly-video-modal" attributes="video opened" noscript>
+  <template>
+    <style>
+      paper-fab.blue {
+        background: #4285f4;
+        color: white;
+      }
+      .player-container {
+        margin: 0 auto;
+        padding-top: 40px;
+      }
+    </style>
+    <paper-dialog heading="{{video.snippet.title}}"
+                  backdrop="true"
+                  transition="paper-dialog-transition-center"
+                  opened="{{opened}}">
+      <p>
+        <iframe id="player" type="text/html" width="640" height="390"
+                src="http://www.youtube.com/embed/{{video.id.videoId}}?enablejsapi=1&origin=http://kashyap02004.github.io/poly-play/&autoplay=1"
+                frameborder="0"
+                allowfullscreen></iframe>
+      </p>
+      <p>
+        {{video.snippet.description}}
+      </p>
+      <paper-fab class="mini blue"
+                 icon="fullscreen-exit" role="button"
+                 dismissive></paper-fab>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer('poly-play-modal', {
+      opened: false,
+      video: {}
+    });
+  </script>
+</polymer-element>
