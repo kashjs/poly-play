@@ -2,7 +2,7 @@
 <link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="../poly-video/poly-video.html">
 
-<polymer-element name="poly-videos" attributes="currentVideo searchTerm">
+<polymer-element name="poly-videos" attributes="currentVideo searchConfig">
   <template>
     <style>
       .video {
@@ -33,7 +33,6 @@
     Polymer('poly-videos', {
       currentVideo: {},
       videos: [],
-      searchTerm: '',
       nextToken: undefined,
       ready: function () {
         var self = this;
@@ -72,7 +71,13 @@
         this.currentVideo = sender.templateInstance.model.video;
         this.fire('video-changed', this.currentVideo);
       },
-      searchTermChanged: _.debounce(function () {
+      observe: {
+        'searchConfig.q': 'searchConfigChanged',
+        'searchConfig.videoDuration': 'searchConfigChanged',
+        'searchConfig.order': 'searchConfigChanged',
+        'searchConfig.publishedAfter': 'searchConfigChanged'
+      },
+      searchConfigChanged: _.debounce(function () {
         this.loadVideos(true);
       }, 100, false),
       handleLoadMore: _.debounce(function () {
@@ -80,28 +85,21 @@
       }, 300, false),
       loadVideos: function (reset) {
         var self = this;
-        var queryObject = {
-          q: self.searchTerm,
-          part: 'snippet',
-          maxResults: 50,
-          type: 'video',
-//          videoCategoryId: 10,
-          videoEmbeddable: true,
-          fields: 'items(id(videoId),snippet(title,publishedAt,description,thumbnails(medium))),nextPageToken',
-          key: 'AIzaSyCujzgGdCJxKUEU1lJvkqwPVaE9nRMKs1I'
-        }
+        var queryObject = self.searchConfig;
         if (self.nextToken && !reset) {
           queryObject.pageToken = self.nextToken;
         }
-        var request = gapi.client.youtube.search.list(queryObject);
-        request.execute(function(response) {
-          self.nextToken = response.result.nextPageToken;
-          if (reset) {
-            self.videos = response.items;
-          } else {
-            self.videos = self.videos.concat(response.items);
-          }
-        });
+        if (window.gapi) {
+          var request = gapi.client.youtube.search.list(queryObject);
+          request.execute(function(response) {
+            self.nextToken = response.result.nextPageToken;
+            if (reset) {
+              self.videos = response.items;
+            } else {
+              self.videos = self.videos.concat(response.items);
+            }
+          });
+        }
       }
     });
   </script>
