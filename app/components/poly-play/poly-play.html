@@ -47,12 +47,13 @@
                   opened="{{showVideo}}">
       <div class="player-container">
         <iframe id="player" type="text/html" width="640" height="390"
-                src="http://www.youtube.com/embed/{{currentVideo.id.videoId}}?enablejsapi=1&origin=http://example.com&autoplay=1"
-                frameborder="0"></iframe>
+                src="http://www.youtube.com/embed/{{currentVideo.id.videoId}}?enablejsapi=1&origin=http://kashyap02004.github.io/poly-play/&autoplay=1"
+                frameborder="0"
+                allowfullscreen></iframe>
       </div>
-      <paper-button label="Minimize"
-                    icon="fullscreen-exit"
-                    dismissive></paper-button>
+      <paper-fab class="mini blue"
+                 icon="fullscreen-exit" role="button"
+                 dismissive></paper-fab>
     </paper-dialog>
 
   </template>

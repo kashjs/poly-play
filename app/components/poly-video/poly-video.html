@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
-<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/core-icons/av-icons.html">
 
 
 <polymer-element name="poly-video" attributes="video">
@@ -29,7 +29,7 @@
         font-weight: bold;
       }
       .title {
-        height: 60px;
+        height: 47px;
         overflow: hidden;
       }
       .controls {
@@ -49,9 +49,7 @@
           {{video.snippet.title}}
         </div>
         <div class="controls">
-          <paper-button label="Play"
-                        role="button"
-                        on-tap="{{playVideo}}"></paper-button>
+          <paper-button icon="av:play-circle-outline" tab-index="2" on-tap="{{playVideo}}"></paper-button>
         </div>
       </div>
     </div>
