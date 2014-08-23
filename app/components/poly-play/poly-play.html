@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../poly-videos/poly-videos.html">
 <link rel="import" href="../poly-video-modal/poly-video-model.html">
+<link rel="import" href="../poly-video-search-config/poly-video-search-config.html">
 
 <polymer-element name="poly-play">
   <template>
@@ -22,8 +23,7 @@
       }
     </style>
     <div class="search-container">
-      <paper-input label="Search Videos..."
-                   on-keyup="{{handleSearchInput}}"></paper-input>
+      <poly-video-search-config searchConfig="{{searchConfig}}"></poly-video-search-config>
       <paper-fab class="toggle-player mini blue"
                  icon="fullscreen" role="button"
                  hidden?="{{showVideo || !currentVideo.id.videoId}}"
@@ -31,7 +31,7 @@
     </div>
 
     <div class="videos-container">
-      <poly-videos searchTerm="{{searchTerm}}"
+      <poly-videos searchConfig="{{searchConfig}}"
                    on-video-changed="{{handleVideoChanged}}"></poly-videos>
     </div>
 
@@ -53,9 +53,6 @@
       },
       showVideoDialog: function () {
         this.showVideo = true;
-      },
-      handleSearchInput: function (event, detail, sender) {
-        this.searchTerm = sender.value;
       }
     });
   </script>

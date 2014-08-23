@@ -1,0 +1,107 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog-transition.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
+<link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+
+
+<polymer-element name="poly-video-search-config" attributes="searchConfig" noscript>
+  <template>
+    <style>
+      .config {
+        text-align: left;
+      }
+    </style>
+    <paper-input label="Search Videos..."
+                 on-keyup="{{handleSearchInput}}"></paper-input>
+    <paper-button icon="menu" on-tap="{{showDialog}}"></paper-button>
+    <paper-dialog heading="Search Configuration"
+                  backdrop="true"
+                  transition="paper-dialog-transition-center"
+                  opened="{{showConfigModal}}">
+      <div class="config">
+        <h4>Order By</h4>
+        <paper-radio-group selected="{{searchConfig.order}}">
+          <paper-radio-button name="relevance" label="Relevance"></paper-radio-button>
+          <paper-radio-button name="date" label="Date"></paper-radio-button><br>
+          <paper-radio-button name="rating" label="Rating"></paper-radio-button>
+          <paper-radio-button name="viewcount" label="View Count"></paper-radio-button>
+        </paper-radio-group>
+        <h4>Published</h4>
+        <paper-radio-group selected="0" on-change="{{handlePublishChange}}">
+          <paper-radio-button name="0" label="Any Time"></paper-radio-button>
+          <paper-radio-button name="1" label="Last Hour"></paper-radio-button><br>
+          <paper-radio-button name="2" label="Today"></paper-radio-button>
+          <paper-radio-button name="3" label="This Week"></paper-radio-button><br>
+          <paper-radio-button name="4" label="This Month"></paper-radio-button>
+          <paper-radio-button name="5" label="This Year"></paper-radio-button><br>
+          <paper-radio-button name="6" label="Past 5 Years"></paper-radio-button>
+        </paper-radio-group>
+        <h4>Duration</h4>
+        <paper-radio-group selected="{{searchConfig.videoDuration}}">
+          <paper-radio-button name="any" label="Any"></paper-radio-button>
+          <paper-radio-button name="long" label="> 20 min (Long)"></paper-radio-button><br>
+          <paper-radio-button name="medium" label="4 min - 20 min (Medium)"></paper-radio-button>
+          <paper-radio-button name="short" label="< 4 min (Short)"></paper-radio-button>
+        </paper-radio-group>
+      </div>
+
+      <paper-button label="close" dismissive></paper-button>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer('poly-video-search-config', {
+      showConfigModal: false,
+      searchConfig: {
+        q: '',
+        part: 'snippet',
+        maxResults: 20,
+        order: 'relevance',
+        type: 'video',
+        videoDuration: 'any',
+        publishedAfter: undefined,
+//          videoCategoryId: 10,
+        videoEmbeddable: true,
+        fields: 'items(id(videoId),snippet(title,publishedAt,description,thumbnails(medium))),nextPageToken',
+        key: 'AIzaSyDw5pJolqkxiAsQ6V8NeCpohdR3dRqDwWg'
+      },
+      handlePublishChange: function (event, detail, sender) {
+        var id = Number(sender.selected),
+          start;
+        switch (id) {
+          case 1:
+            start = moment().subtract(1, 'hour').toJSON();
+            break;
+          case 2:
+            start = moment().startOf('day').toJSON();
+            break;
+          case 3:
+            start = moment().startOf('week').toJSON();
+            break;
+          case 4:
+            start = moment().startOf('month').toJSON();
+            break;
+          case 5:
+            start = moment().startOf('year').toJSON();
+            break;
+          case 6:
+            start = moment().subtract(5, 'year').toJSON();
+            break;
+          case 0:
+            start = undefined;
+            break;
+        }
+
+        this.searchConfig.publishedAfter = start;
+      },
+      handleSearchInput: function (event, detail, sender) {
+        this.searchConfig.q = sender.value;
+      },
+      showDialog: function () {
+        this.showConfigModal = true;
+      }
+    });
+  </script>
+</polymer-element>
