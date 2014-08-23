@@ -20,6 +20,6 @@ git merge upstream/master
 ```
 bower install
 ```
-* Make your changes under master. Also write/modify tests under src/xyz/test directory.
+* Make your changes under master.
 * push your changes
 * go to your github account and under forked repo, submit the pull request
