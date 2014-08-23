@@ -7,7 +7,7 @@
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
 
 
-<polymer-element name="poly-video-search-config" attributes="searchConfig" noscript>
+<polymer-element name="poly-video-search-config" attributes="videos" noscript>
   <template>
     <style>
       .config {
@@ -20,7 +20,9 @@
     </style>
     <paper-input label="Search Videos..."
                  on-keyup="{{handleSearchInput}}"></paper-input>
-    <paper-icon-button icon="menu" on-tap="{{showDialog}}"></paper-icon-button>
+    <paper-icon-button icon="menu" on-tap="{{showDialog}}"></paper-icon-button><br>
+    <span><a on-tap="{{resetSearch}}">All Videos</a></span>
+    <span hidden?="{{searchConfig.q == ''}}"> &gt; <a>{{searchConfig.q}}</a></span>
     <paper-dialog heading="Search Configuration"
                   backdrop="true"
                   transition="paper-dialog-transition-center"
@@ -68,9 +70,11 @@
         publishedAfter: undefined,
 //          videoCategoryId: 10,
         videoEmbeddable: true,
-        fields: 'items(id(videoId),snippet(title,publishedAt,description,thumbnails(medium))),nextPageToken',
+        fields: 'items(id(videoId),snippet(title,publishedAt,description,channelId,channelTitle,thumbnails(medium))),nextPageToken',
         key: 'AIzaSyCujzgGdCJxKUEU1lJvkqwPVaE9nRMKs1I'
       },
+      videos: [],
+      nextToken: undefined,
       handlePublishChange: function (event, detail, sender) {
         var id = Number(sender.selected),
           start;
@@ -97,15 +101,80 @@
             start = undefined;
             break;
         }
-
         this.searchConfig.publishedAfter = start;
+        this.resetVideos();
+      },
+      resetSearch: function () {
+        this.searchConfig.q = '';
       },
       handleSearchInput: function (event, detail, sender) {
         this.searchConfig.q = sender.value;
       },
       showDialog: function () {
         this.showConfigModal = true;
-      }
+      },
+      ready: function () {
+        var self = this;
+        function initialize () {
+          window.googleApiClientReady = function() {
+            gapi.auth.init(function() {
+              window.setTimeout(loadAPIClientInterfaces, 1);
+            });
+          }
+
+          window.loadAPIClientInterfaces = function () {
+            gapi.client.load('youtube', 'v3', function() {
+              handleAPILoaded();
+            });
+          }
+
+          // After the API loads, call a function to enable the search box.
+          window.handleAPILoaded = function () {
+            self.resetVideos();
+          }
+
+          var loadApiScript = function () {
+            var scr = document.createElement('script');
+            scr.type = 'text/javascript';
+            scr.async = true;
+            scr.src = "https://apis.google.com/js/client.js?onload=googleApiClientReady";
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(scr, s);
+          }
+          loadApiScript();
+        }
+
+        initialize();
+      },
+      observe: {
+        'searchConfig.videoDuration': 'resetVideos',
+        'searchConfig.order': 'resetVideos',
+        'searchConfig.q': 'resetVideos'
+      },
+      resetVideos: function () {
+        this.loadVideos(true);
+      },
+      handleLoadMore: function () {
+        this.loadVideos();
+      },
+      loadVideos: _.debounce(function (reset) {
+        var self = this;
+        var queryObject = self.searchConfig;
+        if (self.nextToken && !reset) {
+          queryObject.pageToken = self.nextToken;
+        }
+        if (window.gapi && window.gapi.client && window.gapi.client.youtube) {
+          var request = gapi.client.youtube.search.list(queryObject);
+          request.execute(function(response) {
+            self.nextToken = response.result.nextPageToken;
+            if (reset) {
+              self.videos = response.items;
+            } else {
+              self.videos = self.videos.concat(response.items);
+            }
+          });
+        }
+      }, 300, false)
     });
   </script>
 </polymer-element>
