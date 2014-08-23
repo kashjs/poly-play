@@ -1,9 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog-transition.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../poly-videos/poly-videos.html">
+<link rel="import" href="../poly-video-modal/poly-video-model.html">
 
 <polymer-element name="poly-play">
   <template>
@@ -14,10 +12,6 @@
       }
       .videos-container {
         padding: 0 20px;
-      }
-      .player-container {
-        margin: 0 auto;
-        padding-top: 40px;
       }
       .toggle-player {
         float: right;
@@ -41,20 +35,7 @@
                    on-video-changed="{{handleVideoChanged}}"></poly-videos>
     </div>
 
-    <paper-dialog heading="{{currentVideo.snippet.title}}"
-                  backdrop="true"
-                  transition="paper-dialog-transition-center"
-                  opened="{{showVideo}}">
-      <div class="player-container">
-        <iframe id="player" type="text/html" width="640" height="390"
-                src="http://www.youtube.com/embed/{{currentVideo.id.videoId}}?enablejsapi=1&origin=http://kashyap02004.github.io/poly-play/&autoplay=1"
-                frameborder="0"
-                allowfullscreen></iframe>
-      </div>
-      <paper-fab class="mini blue"
-                 icon="fullscreen-exit" role="button"
-                 dismissive></paper-fab>
-    </paper-dialog>
+    <poly-video-modal video="{{currentVideo}}" opened="{{showVideo}}"></poly-video-modal>
 
   </template>
   <script>
