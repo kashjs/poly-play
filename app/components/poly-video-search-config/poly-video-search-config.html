@@ -13,10 +13,14 @@
       .config {
         text-align: left;
       }
+      paper-icon-button {
+        position: relative;
+        bottom: 5px;
+      }
     </style>
     <paper-input label="Search Videos..."
                  on-keyup="{{handleSearchInput}}"></paper-input>
-    <paper-button icon="menu" on-tap="{{showDialog}}"></paper-button>
+    <paper-icon-button icon="menu" on-tap="{{showDialog}}"></paper-icon-button>
     <paper-dialog heading="Search Configuration"
                   backdrop="true"
                   transition="paper-dialog-transition-center"

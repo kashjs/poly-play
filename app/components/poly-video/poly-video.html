@@ -51,7 +51,7 @@
     </style>
     <div class="video">
       <div class="thumbnail">
-        <img src="{{video.snippet.thumbnails.medium.url}}" onload="this.style.opacity = 1">
+        <img src="{{video.snippet.thumbnails.medium.url}}" on-tap="{{playVideo}}" onload="this.style.opacity = 1">
         <div class="controls">
           <paper-button icon="av:play-circle-outline" on-tap="{{playVideo}}"></paper-button>
         </div>
