@@ -58,6 +58,9 @@
 
   </template>
   <script>
+    var paperInput = CoreStyle.g.paperInput = CoreStyle.g.paperInput || {};
+    paperInput.focusedColor = '#4285f4';
+
     Polymer('poly-play', {
       currentVideo: {},
       showVideo: false,

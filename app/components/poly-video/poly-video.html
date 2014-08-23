@@ -11,9 +11,10 @@
         height: 100px;
         width: 330px;
         cursor: default;
+        background: rgba(0,0,0,.03);
       }
       .video:hover {
-        background: rgba(0,0,0,.1);
+        background: rgba(0,0,0,.05);
       }
       .thumbnail {
         width: 170px;
@@ -25,10 +26,12 @@
       .info {
         float: left;
         width: 150px;
-        padding: 5px;
-        font-size: 12px;
-        font-weight: bold;
+        padding: 0 5px;
+        font-size: 17px;
+        font-weight: 100;
         overflow: hidden;
+        max-height: 100%;
+        line-height: 1.5;
       }
       .controls {
         color: rgba(255,255,255,.5);
@@ -39,11 +42,15 @@
       img {
         height: 100%;
         width: 100%;
+        opacity: 0;
+        -webkit-transition: opacity .5s ease;
+        transition: opacity .5s ease;
+        -moz-transition: opacity .3s ease;
       }
     </style>
     <div class="video">
       <div class="thumbnail">
-        <img src="{{video.snippet.thumbnails.medium.url}}">
+        <img src="{{video.snippet.thumbnails.medium.url}}" onload="this.style.opacity = 1">
         <div class="controls">
           <paper-button icon="av:play-circle-outline" tab-index="2" on-tap="{{playVideo}}"></paper-button>
         </div>
