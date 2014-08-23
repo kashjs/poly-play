@@ -20,6 +20,7 @@
         height: 100%;
         overflow: hidden;
         float: left;
+        position: relative;
       }
       .info {
         float: left;
@@ -27,13 +28,13 @@
         padding: 5px;
         font-size: 12px;
         font-weight: bold;
-      }
-      .title {
-        height: 47px;
         overflow: hidden;
       }
       .controls {
-        color: #4285f4;
+        color: rgba(255,255,255,.5);
+        position: absolute;
+        top: 30px;
+        left: 65px;
       }
       img {
         height: 100%;
@@ -43,14 +44,12 @@
     <div class="video">
       <div class="thumbnail">
         <img src="{{video.snippet.thumbnails.medium.url}}">
-      </div>
-      <div class="info">
-        <div class="title">
-          {{video.snippet.title}}
-        </div>
         <div class="controls">
           <paper-button icon="av:play-circle-outline" tab-index="2" on-tap="{{playVideo}}"></paper-button>
         </div>
+      </div>
+      <div class="info">
+        {{video.snippet.title}}
       </div>
     </div>
   </template>
