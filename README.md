@@ -18,8 +18,14 @@ git merge upstream/master
 ```
 * install local packages
 ```
+npm install
 bower install
 ```
-* Make your changes under master.
+* run local environment:
+```
+gulp
+```
+* your local dev is running at `http://localhost:9003`
+* Make your changes under master
 * push your changes
 * go to your github account and under forked repo, submit the pull request
