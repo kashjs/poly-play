@@ -33,6 +33,12 @@
       a:hover {
         text-decoration: underline;
       }
+      .pby {
+        width: 170px;
+      }
+      .poly-play-container {
+        min-height: 500px;
+      }
     </style>
   </head>
   <body>
@@ -54,6 +60,11 @@
       <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </p>
     <!-- 3. Declare the element by its tag. -->
-    <poly-play></poly-play>
+    <div class="poly-play-container">
+      <poly-play></poly-play>
+    </div>
+    <div class="footer">
+      <img class="pby" src="https://developers.google.com/youtube/images/pwrdByYT-black.png">
+    </div>
   </body>
 </html>
