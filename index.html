@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta content='width=device-width, user-scalable=0' name='viewport' />
+
     <title>Poly-Play Clean and simple video search</title>
     <!-- 1. Load platform support before any code that touches the DOM. -->
     <script src="app/bower_components/platform/platform.js"></script>
@@ -40,6 +42,15 @@
       .poly-play-container {
         min-height: 500px;
       }
+      /* Smartphones (portrait and landscape) ----------- */
+      @media only screen
+      and (min-device-width : 320px)
+      and (max-device-width : 480px) {
+        body {
+          width: 400px;
+        }
+      }
+
     </style>
   </head>
   <body>

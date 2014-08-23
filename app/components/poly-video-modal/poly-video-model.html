@@ -25,6 +25,20 @@
         margin-top: 0;
         max-width: 640px;
       }
+
+      #player {
+        width: 640px;
+        height: 390px;
+      }
+      /* Smartphones (portrait and landscape) ----------- */
+      @media only screen
+      and (min-device-width : 320px)
+      and (max-device-width : 480px) {
+        #player {
+          width: 300px;
+          height: 182px;
+        }
+      }
     </style>
     <paper-dialog backdrop="true"
                   transition="paper-dialog-transition-center"
@@ -34,7 +48,7 @@
       </p>
 
       <p class="player-area">
-        <iframe id="player" type="text/html" width="640" height="390"
+        <iframe id="player" type="text/html"
                 src="http://www.youtube.com/embed/{{video.id.videoId}}?enablejsapi=1&origin=http://kashyap02004.github.io/poly-play/&autoplay=1"
                 frameborder="0"
                 allowfullscreen></iframe>
