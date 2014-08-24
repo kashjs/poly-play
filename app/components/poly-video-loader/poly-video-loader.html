@@ -51,6 +51,7 @@
         this.loadVideos(true);
       },
       loadNewPage: function () {
+        this.config.pageToken = undefined;
         this.loadVideos();
       },
       loadVideos: _.debounce(function (concat) {
