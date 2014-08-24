@@ -2,7 +2,7 @@
 <link rel="import" href="../../bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="../poly-video/poly-video.html">
 
-<polymer-element name="poly-videos" attributes="currentVideo searchConfig">
+<polymer-element name="poly-videos" attributes="videos">
   <template>
     <style>
       .video {
@@ -17,97 +17,25 @@
           margin-left: 0;
         }
       }
-      .loadmore {
-        text-align: center;
-        margin-bottom: 30px;
-      }
     </style>
     <div id="videos-list">
       <template repeat="{{video in videos}}">
         <div class="video">
           <poly-video video="{{video}}"
-                      on-video-play="{{handleVideoPlay}}"></poly-video>
+                      on-video-play="{{handleVideoPlay}}"
+                      on-channel-play="{{handleChannelPlay}}"></poly-video>
         </div>
       </template>
     </div>
-    <p class="loadmore">
-      <paper-button label="Load More ..."
-                    hidden?="{{!videos.length}}"
-                    on-tap="{{handleLoadMore}}"
-                    dismissive></paper-button>
-    </p>
   </template>
   <script>
     Polymer('poly-videos', {
-      currentVideo: {},
       videos: [],
-      nextToken: undefined,
-      ready: function () {
-        var self = this;
-        function initialize () {
-          window.googleApiClientReady = function() {
-            gapi.auth.init(function() {
-              window.setTimeout(loadAPIClientInterfaces, 1);
-            });
-          }
-
-          window.loadAPIClientInterfaces = function () {
-            gapi.client.load('youtube', 'v3', function() {
-              handleAPILoaded();
-            });
-          }
-
-          // After the API loads, call a function to enable the search box.
-          window.handleAPILoaded = function () {
-            self.loadVideos();
-          }
-
-          var loadApiScript = function () {
-            var scr = document.createElement('script');
-            scr.type = 'text/javascript';
-            scr.async = true;
-            scr.src = "https://apis.google.com/js/client.js?onload=googleApiClientReady";
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(scr, s);
-          }
-          loadApiScript();
-        }
-
-        initialize();
-      },
       handleVideoPlay: function (event, detail, sender) {
-        this.currentVideo = sender.templateInstance.model.video;
-        this.fire('video-changed', this.currentVideo);
+        this.fire('video-changed', sender.templateInstance.model.video);
       },
-      observe: {
-        'searchConfig.q': 'searchConfigChanged',
-        'searchConfig.videoDuration': 'searchConfigChanged',
-        'searchConfig.order': 'searchConfigChanged',
-        'searchConfig.publishedAfter': 'searchConfigChanged'
-      },
-      searchConfigChanged: _.debounce(function () {
-        this.loadVideos(true);
-      }, 100, false),
-      handleLoadMore: _.debounce(function () {
-        this.loadVideos();
-      }, 300, false),
-      loadVideos: function (reset) {
-        var self = this;
-        var queryObject = self.searchConfig;
-        if (self.nextToken && !reset) {
-          queryObject.pageToken = self.nextToken;
-        }
-        if (window.gapi) {
-          var request = gapi.client.youtube.search.list(queryObject);
-          request.execute(function(response) {
-            self.nextToken = response.result.nextPageToken;
-            if (reset) {
-              self.videos = response.items;
-            } else {
-              self.videos = self.videos.concat(response.items);
-            }
-          });
-        }
+      handleChannelPlay: function (event, detail, sender) {
+        this.fire('channel-selected', sender.templateInstance.model.video);
       }
     });
   </script>

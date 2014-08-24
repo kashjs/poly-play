@@ -21,9 +21,13 @@
         background: #4285f4;
         color: white;
       }
+      .loadmore {
+        text-align: center;
+        margin-bottom: 30px;
+      }
     </style>
     <div class="search-container">
-      <poly-video-search-config searchConfig="{{searchConfig}}"></poly-video-search-config>
+      <poly-video-search-config id="search" videos="{{videos}}"></poly-video-search-config>
       <paper-fab class="toggle-player mini blue"
                  icon="fullscreen" role="button"
                  hidden?="{{showVideo || !currentVideo.id.videoId}}"
@@ -31,11 +35,18 @@
     </div>
 
     <div class="videos-container">
-      <poly-videos searchConfig="{{searchConfig}}"
-                   on-video-changed="{{handleVideoChanged}}"></poly-videos>
+      <poly-videos videos="{{videos}}"
+                   on-video-changed="{{handleVideoChanged}}"
+                   on-channel-selected="{{handleChannelSelected}}"></poly-videos>
     </div>
 
     <poly-video-modal video="{{currentVideo}}" opened="{{showVideo}}"></poly-video-modal>
+
+    <p class="loadmore">
+      <paper-button label="Load More ..."
+                    hidden?="{{!videos.length}}"
+      on-tap="{{handleLoadMore}}"></paper-button>
+    </p>
 
   </template>
   <script>
@@ -45,14 +56,19 @@
     Polymer('poly-play', {
       currentVideo: {},
       showVideo: false,
-      searchTerm: '',
       savedVideos: [],
       handleVideoChanged: function (event, video, sender) {
         this.currentVideo = video;
         this.showVideo = true;
       },
+      handleChannelSelected: function (event, video, sender) {
+        this.$.search.setChannel(video);
+      },
       showVideoDialog: function () {
         this.showVideo = true;
+      },
+      handleLoadMore: function () {
+        this.$.search.loadMore();
       }
     });
   </script>
