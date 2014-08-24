@@ -41,6 +41,8 @@
     </div>
     <poly-video-modal video="{{currentVideo}}"
                       opened="{{showVideo}}"
+                      videos="{{videos}}"
+                      on-video-changed="{{handleVideoChanged}}"
                       on-channel-selected="{{handleChannelSelected}}"></poly-video-modal>
     <p class="loadmore">
       <paper-button label="Load More ..."

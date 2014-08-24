@@ -2,9 +2,11 @@
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog-transition.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/core-icons/av-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 
 
-<polymer-element name="poly-video-modal" attributes="video opened" noscript>
+<polymer-element name="poly-video-modal" attributes="video opened videos" noscript>
   <template>
     <style>
       paper-fab.blue {
@@ -59,9 +61,13 @@
                 frameborder="0"
                 allowfullscreen></iframe>
       </p>
-      <p class="description">
-        {{video.snippet.description}}
-      </p>
+      <div class="description" horizontal layout>
+        <div flex>{{video.snippet.description}}</div>
+        <div >
+          <paper-icon-button on-tap="{{playPreviousVideo}}" icon="av:skip-previous"></paper-icon-button>
+          <paper-icon-button on-tap="{{playNextVideo}}" icon="av:skip-next"></paper-icon-button>
+        </div>
+      </div>
       <p class="published">
         Published {{formatTime(video.snippet.publishedAt)}}
       </p>
@@ -82,6 +88,33 @@
       video: {},
       formatTime: function (time) {
         return moment(time).fromNow();
+      },
+      playNextVideo: function () {
+        this.changeVideo('next');
+      },
+      playPreviousVideo: function () {
+        this.changeVideo('previous');
+      },
+      changeVideo :function (action) {
+        var index = undefined;
+        for (var i = 0; i < this.videos.length; i++) {
+          if (this.videos[i].id.videoId === this.video.id.videoId) {
+            index = i;
+          }
+        }
+        if (action == 'previous') {
+          index = index - 1;
+          if (index < 0) {
+            index = this.videos.length - 1;
+          }
+        } else {
+          index = index + 1;
+          if (index >= this.videos.length) {
+            index = 0;
+          }
+        }
+        var video = this.videos[index];
+        this.fire('video-changed', video);
       },
       handleChannelTap: function(event, detail, sender) {
         this.fire('channel-selected', this.video);
