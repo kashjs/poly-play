@@ -25,7 +25,13 @@
         margin-top: 0;
         max-width: 640px;
       }
-
+      .published {
+        font-size: 12px;
+      }
+      .channel {
+        color: #4285f4;
+        cursor: pointer;
+      }
       #player {
         width: 640px;
         height: 390px;
@@ -56,6 +62,15 @@
       <p class="description">
         {{video.snippet.description}}
       </p>
+      <p class="published">
+        Published {{formatTime(video.snippet.publishedAt)}}
+      </p>
+      <p>
+        Channel
+        <span on-tap="{{handleChannelTap}}" class="channel" dismissive>
+          {{video.snippet.channelTitle}}
+        </span>
+      </p>
       <paper-fab class="mini blue"
                  icon="fullscreen-exit" role="button"
                  dismissive></paper-fab>
@@ -64,7 +79,13 @@
   <script>
     Polymer('poly-video-modal', {
       opened: false,
-      video: {}
+      video: {},
+      formatTime: function (time) {
+        return moment(time).fromNow();
+      },
+      handleChannelTap: function(event, detail, sender) {
+        this.fire('channel-selected', this.video);
+      }
     });
   </script>
 </polymer-element>

@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../poly-videos/poly-videos.html">
-<link rel="import" href="../poly-video-modal/poly-video-model.html">
+<link rel="import" href="../poly-video-modal/poly-video-modal.html">
 <link rel="import" href="../poly-video-search-config/poly-video-search-config.html">
 
 <polymer-element name="poly-play">
@@ -39,9 +39,9 @@
                    on-video-changed="{{handleVideoChanged}}"
                    on-channel-selected="{{handleChannelSelected}}"></poly-videos>
     </div>
-
-    <poly-video-modal video="{{currentVideo}}" opened="{{showVideo}}"></poly-video-modal>
-
+    <poly-video-modal video="{{currentVideo}}"
+                      opened="{{showVideo}}"
+                      on-channel-selected="{{handleChannelSelected}}"></poly-video-modal>
     <p class="loadmore">
       <paper-button label="Load More ..."
                     hidden?="{{!videos.length}}"
