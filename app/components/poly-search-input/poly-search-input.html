@@ -15,6 +15,7 @@
             core-input {
               line-height: 25px;
               border-bottom: 2px solid #4285f4;
+              padding-bottom: 2px;
             }
             .input-container {
               width: 325px;
@@ -41,7 +42,7 @@
             }
         </style>
         <div class="input-container">
-            <core-input type="text" id="searchInput" value="{{inputValue}}" on-keyup="{{handleKeyUp}}"></core-input>
+            <core-input type="text" id="searchInput" autofocus placeholder="Search" value="{{inputValue}}" on-keyup="{{handleKeyUp}}"></core-input>
             <div id="auto-completion" hidden?="{{!showAutoCompletion}}">
               <div class="items">
                 <template repeat="{{completion, index in autoCompletions}}">
