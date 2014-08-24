@@ -37,18 +37,26 @@
       }
 
       .title {
-        height: 54px;
+        height: 55px;
         overflow: hidden;
       }
       .channel {
         font-size: 12px;
-        height: 36px;
+        height: 17px;
+        line-height: 17px;
+        color: #4285f4;
+        font-weight: bold;
       }
       .controls {
-        color: rgba(255,255,255,.5);
+        color: rgba(255,255,255,.7);
         position: absolute;
         top: 30px;
         left: 65px;
+      }
+      .published {
+        height: 17px;
+        line-height: 17px;
+        font-size: 12px;
       }
       img {
         height: 100%;
@@ -71,9 +79,12 @@
         </div>
       </div>
       <div class="info">
-        <div on-tap="{{handleVideoTap}}" class="title">{{video.snippet.title}}</div>
+        <div on-tap="{{handleVideoTap}}" class="title">
+          {{video.snippet.title}}
+        </div>
+        <div class="published">Published {{formatTime(video.snippet.publishedAt)}}</div>
         <div on-tap="{{handleChannelTap}}" class="channel">
-          <paper-item icon="search" label="{{video.snippet.channelTitle}}"></paper-item>
+          {{video.snippet.channelTitle}}
         </div>
       </div>
     </div>
@@ -86,6 +97,9 @@
       },
       handleChannelTap: function(event, detail, sender) {
         this.fire('channel-play');
+      },
+      formatTime: function (time) {
+        return moment(time).fromNow();
       }
     });
   </script>
