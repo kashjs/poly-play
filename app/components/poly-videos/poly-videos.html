@@ -22,7 +22,8 @@
       <template repeat="{{video in videos}}">
         <div class="video">
           <poly-video video="{{video}}"
-                      on-video-play="{{handleVideoPlay}}"></poly-video>
+                      on-video-play="{{handleVideoPlay}}"
+                      on-channel-play="{{handleChannelPlay}}"></poly-video>
         </div>
       </template>
     </div>
@@ -32,6 +33,9 @@
       videos: [],
       handleVideoPlay: function (event, detail, sender) {
         this.fire('video-changed', sender.templateInstance.model.video);
+      },
+      handleChannelPlay: function (event, detail, sender) {
+        this.fire('channel-selected', sender.templateInstance.model.video);
       }
     });
   </script>

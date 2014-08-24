@@ -36,7 +36,8 @@
 
     <div class="videos-container">
       <poly-videos videos="{{videos}}"
-                   on-video-changed="{{handleVideoChanged}}"></poly-videos>
+                   on-video-changed="{{handleVideoChanged}}"
+                   on-channel-selected="{{handleChannelSelected}}"></poly-videos>
     </div>
 
     <poly-video-modal video="{{currentVideo}}" opened="{{showVideo}}"></poly-video-modal>
@@ -60,11 +61,14 @@
         this.currentVideo = video;
         this.showVideo = true;
       },
+      handleChannelSelected: function (event, video, sender) {
+        this.$.search.setChannel(video);
+      },
       showVideoDialog: function () {
         this.showVideo = true;
       },
       handleLoadMore: function () {
-        this.$.search.handleLoadMore();
+        this.$.search.loadMore();
       }
     });
   </script>

@@ -5,7 +5,9 @@
 <link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
-
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../poly-video-loader/poly-video-loader.html">
 
 <polymer-element name="poly-video-search-config" attributes="videos" noscript>
   <template>
@@ -13,30 +15,80 @@
       .config {
         text-align: left;
       }
-      paper-icon-button {
+      paper-button {
+        vertical-align: middle;
         position: relative;
-        bottom: 5px;
+      }
+      .group-by-label {
+        top: 1px;
+      }
+      .more-filters-label {
+        bottom: 2px;
+      }
+      .on-screen-config {
+        text-align: left;
+      }
+      .pagination {
+        text-align: left;
+      }
+      .on-search-channel {
+        vertical-align: top;
       }
     </style>
-    <paper-input label="Search Videos..."
-                 on-keyup="{{handleSearchInput}}"></paper-input>
-    <paper-icon-button icon="menu" on-tap="{{showDialog}}"></paper-icon-button><br>
-    <span><a on-tap="{{resetSearch}}">All Videos</a></span>
-    <span hidden?="{{searchConfig.q == ''}}"> &gt; <a>{{searchConfig.q}}</a></span>
+    <poly-video-loader config="{{searchConfig}}"
+                       videos="{{videos}}"
+                       on-videos-loaded="{{videosLoaded}}"></poly-video-loader>
+    <p>
+      <paper-input label="Search Videos..."
+                   on-change="{{setSearch}}"
+                   value="{{searchConfig.q}}"></paper-input>
+      <span hidden?="{{!currentChannel.title}}">
+        <paper-button class="on-search-channel"
+                      icon="cancel"
+                      label="{{currentChannel.title}}"
+                      on-tap="{{clearChannel}}"></paper-button>
+      </span>
+    </p>
+
+    <div class="on-screen-config">
+      <paper-button class="group-by-label"
+                    label="Order By"></paper-button>
+      <paper-radio-group selected="{{searchConfig.order}}">
+        <paper-radio-button name="relevance"
+                            label="Relevance"></paper-radio-button>
+        <paper-radio-button name="date"
+                            label="Upload Date"></paper-radio-button>
+        <paper-radio-button name="rating"
+                            label="Rating"></paper-radio-button>
+        <paper-radio-button name="viewcount"
+                            label="View Count"></paper-radio-button>
+      </paper-radio-group>
+      <paper-button class="more-filters-label"
+                    icon="menu"
+                    on-tap="{{showDialog}}"></paper-button>
+    </div>
+    <div class="pagination">
+      <span>
+        <paper-button on-tap="{{clearChannelAndSearch}}"
+                      label="All Videos"></paper-button>
+      </span>
+      <span hidden?="{{!currentChannel.title}}">
+        <paper-button icon="chevron-right"></paper-button>
+        <paper-button on-tap="{{clearSearch}}"
+                      label="{{currentChannel.title}}"></paper-button>
+      </span>
+      <span hidden?="{{searchConfig.q == ''}}">
+        <paper-button icon="chevron-right"></paper-button>
+        <paper-button label="{{searchConfig.q}}"></paper-button>
+      </span>
+    </div>
     <paper-dialog heading="Search Configuration"
                   backdrop="true"
                   transition="paper-dialog-transition-center"
                   opened="{{showConfigModal}}">
       <div class="config">
-        <h4>Order By</h4>
-        <paper-radio-group selected="{{searchConfig.order}}">
-          <paper-radio-button name="relevance" label="Relevance"></paper-radio-button>
-          <paper-radio-button name="date" label="Date"></paper-radio-button><br>
-          <paper-radio-button name="rating" label="Rating"></paper-radio-button>
-          <paper-radio-button name="viewcount" label="View Count"></paper-radio-button>
-        </paper-radio-group>
         <h4>Published</h4>
-        <paper-radio-group selected="0" on-change="{{handlePublishChange}}">
+        <paper-radio-group selected="0" on-change="{{setPublishChange}}">
           <paper-radio-button name="0" label="Any Time"></paper-radio-button>
           <paper-radio-button name="1" label="Last Hour"></paper-radio-button><br>
           <paper-radio-button name="2" label="Today"></paper-radio-button>
@@ -53,7 +105,6 @@
           <paper-radio-button name="short" label="< 4 min (Short)"></paper-radio-button>
         </paper-radio-group>
       </div>
-
       <paper-button label="close" dismissive></paper-button>
     </paper-dialog>
   </template>
@@ -67,15 +118,23 @@
         order: 'relevance',
         type: 'video',
         videoDuration: 'any',
+        pageToken: undefined,
         publishedAfter: undefined,
-//          videoCategoryId: 10,
         videoEmbeddable: true,
+        channelId: '',
         fields: 'items(id(videoId),snippet(title,publishedAt,description,channelId,channelTitle,thumbnails(medium))),nextPageToken',
         key: 'AIzaSyCujzgGdCJxKUEU1lJvkqwPVaE9nRMKs1I'
       },
       videos: [],
+      videosLoaded: function (event, details) {
+        this.nextToken = details.nextToken;
+      },
+      clearNextToken: function () {
+        this.nextToken = undefined;
+        this.searchConfig.pageToken = undefined;
+      },
       nextToken: undefined,
-      handlePublishChange: function (event, detail, sender) {
+      setPublishChange: function (event, detail, sender) {
         var id = Number(sender.selected),
           start;
         switch (id) {
@@ -102,79 +161,44 @@
             break;
         }
         this.searchConfig.publishedAfter = start;
-        this.resetVideos();
       },
-      resetSearch: function () {
+      clearSearch: function () {
+        this.clearNextToken();
+        this.searchConfig.order = 'relevance';
         this.searchConfig.q = '';
       },
-      handleSearchInput: function (event, detail, sender) {
+      setSearch: function (event, detail, sender) {
+        this.clearNextToken();
+        this.searchConfig.order = 'relevance';
         this.searchConfig.q = sender.value;
       },
       showDialog: function () {
         this.showConfigModal = true;
       },
-      ready: function () {
-        var self = this;
-        function initialize () {
-          window.googleApiClientReady = function() {
-            gapi.auth.init(function() {
-              window.setTimeout(loadAPIClientInterfaces, 1);
-            });
-          }
-
-          window.loadAPIClientInterfaces = function () {
-            gapi.client.load('youtube', 'v3', function() {
-              handleAPILoaded();
-            });
-          }
-
-          // After the API loads, call a function to enable the search box.
-          window.handleAPILoaded = function () {
-            self.resetVideos();
-          }
-
-          var loadApiScript = function () {
-            var scr = document.createElement('script');
-            scr.type = 'text/javascript';
-            scr.async = true;
-            scr.src = "https://apis.google.com/js/client.js?onload=googleApiClientReady";
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(scr, s);
-          }
-          loadApiScript();
-        }
-
-        initialize();
+      currentChannel: undefined,
+      loadMore: function () {
+        this.searchConfig.pageToken = this.nextToken;
       },
-      observe: {
-        'searchConfig.videoDuration': 'resetVideos',
-        'searchConfig.order': 'resetVideos',
-        'searchConfig.q': 'resetVideos'
+      setChannel: function (video) {
+        var channel = {
+          title: video.snippet.channelTitle,
+          id: video.snippet.channelId
+        };
+        this.currentChannel = channel;
+        this.searchConfig.channelId = channel.id;
+        this.clearSearch();
+        this.searchConfig.order = 'date';
       },
-      resetVideos: function () {
-        this.loadVideos(true);
+      clearChannel: function () {
+        this.clearNextToken();
+        this.currentChannel = undefined;
+        this.searchConfig.order = 'relevance';
+        this.searchConfig.channelId = '';
       },
-      handleLoadMore: function () {
-        this.loadVideos();
-      },
-      loadVideos: _.debounce(function (reset) {
-        var self = this;
-        var queryObject = self.searchConfig;
-        if (self.nextToken && !reset) {
-          queryObject.pageToken = self.nextToken;
-        }
-        if (window.gapi && window.gapi.client && window.gapi.client.youtube) {
-          var request = gapi.client.youtube.search.list(queryObject);
-          request.execute(function(response) {
-            self.nextToken = response.result.nextPageToken;
-            if (reset) {
-              self.videos = response.items;
-            } else {
-              self.videos = self.videos.concat(response.items);
-            }
-          });
-        }
-      }, 300, false)
+      clearChannelAndSearch: function () {
+        this.clearSearch();
+        this.clearChannel();
+      }
     });
   </script>
 </polymer-element>

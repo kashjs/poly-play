@@ -2,6 +2,7 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/core-icon-button/core-icon-button.html">
 <link rel="import" href="../../bower_components/core-icons/av-icons.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
 
 
 <polymer-element name="poly-video" attributes="video">
@@ -26,13 +27,22 @@
       .info {
         float: left;
         width: 150px;
-        padding: 0 5px;
-        font-size: 17px;
+        padding: 5px;
+        font-size: 14px;
         font-weight: 100;
         overflow: hidden;
+        line-height: 1.3;
         max-height: 100%;
-        line-height: 1.5;
         cursor: pointer;
+      }
+
+      .title {
+        height: 54px;
+        overflow: hidden;
+      }
+      .channel {
+        font-size: 12px;
+        height: 36px;
       }
       .controls {
         color: rgba(255,255,255,.5);
@@ -47,25 +57,35 @@
         -webkit-transition: opacity .5s ease;
         transition: opacity .5s ease;
         -moz-transition: opacity .3s ease;
+        cursor: pointer;
       }
     </style>
     <div class="video">
       <div class="thumbnail">
-        <img src="{{video.snippet.thumbnails.medium.url}}" on-tap="{{playVideo}}" onload="this.style.opacity = 1">
+        <img src="{{video.snippet.thumbnails.medium.url}}"
+             on-tap="{{handleVideoTap}}"
+             onload="this.style.opacity = 1">
         <div class="controls">
-          <paper-button icon="av:play-circle-outline" on-tap="{{playVideo}}"></paper-button>
+          <paper-button icon="av:play-circle-outline"
+                        on-tap="{{handleVideoTap}}"></paper-button>
         </div>
       </div>
       <div class="info">
-        <span on-tap="{{playVideo}}">{{video.snippet.title}}</span>
+        <div on-tap="{{handleVideoTap}}" class="title">{{video.snippet.title}}</div>
+        <div on-tap="{{handleChannelTap}}" class="channel">
+          <paper-item icon="search" label="{{video.snippet.channelTitle}}"></paper-item>
+        </div>
       </div>
     </div>
   </template>
   <script>
     Polymer('poly-video', {
       video: {},
-      playVideo: function(event, detail, sender) {
+      handleVideoTap: function(event, detail, sender) {
         this.fire('video-play');
+      },
+      handleChannelTap: function(event, detail, sender) {
+        this.fire('channel-play');
       }
     });
   </script>
