@@ -5,12 +5,12 @@
   <script>
     Polymer('poly-video-loader', {
       observe: {
-        'config.q': 'loadVideos',
-        'config.order': 'loadVideos',
-        'config.videoDuration': 'loadVideos',
+        'config.q': 'loadNewPage',
+        'config.order': 'loadNewPage',
+        'config.videoDuration': 'loadNewPage',
         'config.pageToken': 'loadNextPage',
-        'config.publishedAfter': 'loadVideos',
-        'config.channelId': 'loadVideos'
+        'config.publishedAfter': 'loadNewPage',
+        'config.channelId': 'loadNewPage'
       },
       ready: function () {
         var self = this;
@@ -49,6 +49,9 @@
       },
       loadNextPage: function () {
         this.loadVideos(true);
+      },
+      loadNewPage: function () {
+        this.loadVideos();
       },
       loadVideos: _.debounce(function (concat) {
         var self = this;
