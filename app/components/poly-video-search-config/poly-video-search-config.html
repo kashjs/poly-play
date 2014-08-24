@@ -8,6 +8,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../poly-video-loader/poly-video-loader.html">
+<link rel="import" href="../poly-search-input/poly-search-input.html">
 
 <polymer-element name="poly-video-search-config" attributes="videos" noscript>
   <template>
@@ -34,14 +35,17 @@
       .on-search-channel {
         vertical-align: top;
       }
+      #search-input {
+        margin-bottom: 20px;
+      }
     </style>
     <poly-video-loader config="{{searchConfig}}"
                        videos="{{videos}}"
                        on-videos-loaded="{{videosLoaded}}"></poly-video-loader>
     <div>
-      <paper-input label="Search Videos..."
-                   on-change="{{setSearch}}"
-                   value="{{searchConfig.q}}"></paper-input>
+      <div id="search-input">
+        <poly-search-input inputValue="{{searchConfig.q}}" on-key-changed="{{setSearch}}"></poly-search-input>
+      </div>
       <span hidden?="{{!currentChannel.title}}">
         <paper-button class="on-search-channel"
                       icon="cancel"
@@ -170,7 +174,7 @@
       setSearch: function (event, detail, sender) {
         this.clearNextToken();
         this.searchConfig.order = 'relevance';
-        this.searchConfig.q = sender.value;
+//        this.searchConfig.q = sender.value;
       },
       showDialog: function () {
         this.showConfigModal = true;
