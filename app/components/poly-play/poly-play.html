@@ -9,7 +9,7 @@
     <style>
       .search-container {
         text-align: center;
-        padding: 30px;
+        padding: 10px;
       }
       .videos-container {
         padding: 0 20px;
@@ -27,11 +27,11 @@
       }
     </style>
     <div class="search-container">
-      <poly-video-search-config id="search" videos="{{videos}}"></poly-video-search-config>
       <paper-fab class="toggle-player mini blue"
                  icon="fullscreen" role="button"
                  hidden?="{{showVideo || !currentVideo.id.videoId}}"
                  on-tap="{{showVideoDialog}}"></paper-fab>
+      <poly-video-search-config id="search" videos="{{videos}}"></poly-video-search-config>
     </div>
 
     <div class="videos-container">

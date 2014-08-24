@@ -38,7 +38,7 @@
     <poly-video-loader config="{{searchConfig}}"
                        videos="{{videos}}"
                        on-videos-loaded="{{videosLoaded}}"></poly-video-loader>
-    <p>
+    <div>
       <paper-input label="Search Videos..."
                    on-change="{{setSearch}}"
                    value="{{searchConfig.q}}"></paper-input>
@@ -48,7 +48,7 @@
                       label="{{currentChannel.title}}"
                       on-tap="{{clearChannel}}"></paper-button>
       </span>
-    </p>
+    </div>
 
     <div class="on-screen-config">
       <paper-button class="group-by-label"
