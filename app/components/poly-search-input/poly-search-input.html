@@ -2,30 +2,53 @@
 <link rel="import" href="../../bower_components/core-input/core-input.html">
 <link rel="import" href="../../bower_components/paper-item/paper-item.html">
 <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-<link rel="stylesheet" href="../../libs/jquery-ui/jquery-ui.min.css">
-<script src="../../libs/jquery-ui/jquery-ui.min.js"></script>
 
-<polymer-element name="poly-search-input" attributes="videos">
+<polymer-element name="poly-search-input" attributes="inputValue">
     <template>
         <style>
+            :host {
+              display: inline-block;
+            }
             #searchInput {
-                position: relative;
+              position: relative;
             }
             core-input {
-                border: 1px solid black
+              line-height: 25px;
+              border-bottom: 2px solid #4285f4;
             }
             .input-container {
-                width: 300px;
+              width: 325px;
+              position: relative;
             }
-            .active {
-                border-bottom: 2px solid red;
+            #auto-completion {
+              height: 0;
+              position: absolute;
+              overflow: visible;
+              width: 100%;
+              z-index: 1;
+            }
+            #auto-completion .items {
+              background: white;
+              box-shadow: 0 2px 2px gray;
+              -webkit-box-shadow: 0 2px 2px gray;
+              -moz-box-shadow: 0 2px 2px gray;
+            }
+            paper-item {
+              border-bottom: 2px solid transparent;
+            }
+            .active, paper-item:hover {
+              border-bottom: 2px solid #0F9D58;
             }
         </style>
         <div class="input-container">
             <core-input type="text" id="searchInput" value="{{inputValue}}" on-keyup="{{handleKeyUp}}"></core-input>
-            <template repeat="{{completion, index in autoCompletions}}">
-                <paper-item class="{{index == currentIndex ? 'active' : ''}}" label="{{completion.label}}" on-tap="{{handleCompletionTap}}"></paper-item>
-            </template>
+            <div id="auto-completion" hidden?="{{!showAutoCompletion}}">
+              <div class="items">
+                <template repeat="{{completion, index in autoCompletions}}">
+                  <paper-item class="{{index == currentIndex ? 'active' : ''}}" label="{{completion}}" on-tap="{{handleCompletionTap}}"></paper-item>
+                </template>
+              </div>
+            </div>
         </div>
 
     </template>
@@ -34,27 +57,53 @@
             inputValue: '',
             autoCompletions: [],
             currentIndex: 1,
+            showAutoCompletion: false,
             handleCompletionTap: function (event, detail, sender) {
-                this.currentIndex = -1;
-                this.inputValue = sender.label
+                this.setInputValue(sender.label);
+            },
+            setInputValue: function (value) {
+              this.currentIndex = -1;
+              this.showAutoCompletion = false;
+              this.inputValue = value || this.$.searchInput.inputValue;
+              this.fire('key-changed');
             },
             handleKeyUp: function (event, details, sender) {
-                var UP = 40, DOWN = 38, ENTER = 13;
-                var apiKey = 'AI39si7ZLU83bKtKd4MrdzqcjTVI3DK9FvwJR6a4kB_SW_Dbuskit-mEYqskkSsFLxN5DiG1OBzdHzYfW0zXWjxirQKyxJfdkg';
-                var query = this.$.searchInput.inputValue;
-                var self = this;
-                $.ajax({
-                    url: "http://suggestqueries.google.com/complete/search?hl=en&ds=yt&client=youtube&hjson=t&cp=1&q="+query+"&key="+apiKey+"&format=5&alt=json&callback=?",
-                    dataType: 'jsonp',
-                    success: function(data, textStatus, request) {
-                        self.autoCompletions = $.map( data[1], function(item) {
-                            return {
-                                label: item[0],
-                                value: item[0]
-                            }
-                        });
-                    }
-                });
+                var UP = 40, DOWN = 38, ENTER = 13, ESC = 27;
+                this.inputValue = this.$.searchInput.inputValue;
+                switch(event.keyCode) {
+                  case 40:
+                    this.currentIndex += 1;
+                    this.inputValue = this.autoCompletions[this.currentIndex];
+                    break;
+                  case 38:
+                    this.currentIndex -= 1;
+                    this.inputValue = this.autoCompletions[this.currentIndex];
+                    break;
+                  case 13:
+                    this.setInputValue();
+                    break;
+                  case 27:
+                    this.showAutoCompletion = false;
+                    break;
+                  default:
+                    this.searchAutoCompletion();
+                }
+            },
+            searchAutoCompletion: function () {
+              var apiKey = 'AIzaSyCujzgGdCJxKUEU1lJvkqwPVaE9nRMKs1I';
+              var query = this.$.searchInput.inputValue;
+              var self = this;
+              $.ajax({
+                url: "http://suggestqueries.google.com/complete/search?hl=en&ds=yt&client=youtube&hjson=t&cp=1&q="+query+"&key="+apiKey+"&format=5&alt=json&callback=?",
+                dataType: 'jsonp',
+                success: function(data, textStatus, request) {
+                  self.currentIndex = -1;
+                  self.showAutoCompletion = true;
+                  self.autoCompletions = $.map( data[1], function(item) {
+                    return item[0];
+                  });
+                }
+              });
             }
         });
     </script>
