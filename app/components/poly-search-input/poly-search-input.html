@@ -1,0 +1,61 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-input/core-input.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="../../libs/jquery-ui/jquery-ui.min.css">
+<script src="../../libs/jquery-ui/jquery-ui.min.js"></script>
+
+<polymer-element name="poly-search-input" attributes="videos">
+    <template>
+        <style>
+            #searchInput {
+                position: relative;
+            }
+            core-input {
+                border: 1px solid black
+            }
+            .input-container {
+                width: 300px;
+            }
+            .active {
+                border-bottom: 2px solid red;
+            }
+        </style>
+        <div class="input-container">
+            <core-input type="text" id="searchInput" value="{{inputValue}}" on-keyup="{{handleKeyUp}}"></core-input>
+            <template repeat="{{completion, index in autoCompletions}}">
+                <paper-item class="{{index == currentIndex ? 'active' : ''}}" label="{{completion.label}}" on-tap="{{handleCompletionTap}}"></paper-item>
+            </template>
+        </div>
+
+    </template>
+    <script>
+        Polymer('poly-search-input', {
+            inputValue: '',
+            autoCompletions: [],
+            currentIndex: 1,
+            handleCompletionTap: function (event, detail, sender) {
+                this.currentIndex = -1;
+                this.inputValue = sender.label
+            },
+            handleKeyUp: function (event, details, sender) {
+                var UP = 40, DOWN = 38, ENTER = 13;
+                var apiKey = 'AI39si7ZLU83bKtKd4MrdzqcjTVI3DK9FvwJR6a4kB_SW_Dbuskit-mEYqskkSsFLxN5DiG1OBzdHzYfW0zXWjxirQKyxJfdkg';
+                var query = this.$.searchInput.inputValue;
+                var self = this;
+                $.ajax({
+                    url: "http://suggestqueries.google.com/complete/search?hl=en&ds=yt&client=youtube&hjson=t&cp=1&q="+query+"&key="+apiKey+"&format=5&alt=json&callback=?",
+                    dataType: 'jsonp',
+                    success: function(data, textStatus, request) {
+                        self.autoCompletions = $.map( data[1], function(item) {
+                            return {
+                                label: item[0],
+                                value: item[0]
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</polymer-element>

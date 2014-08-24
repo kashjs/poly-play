@@ -8,6 +8,7 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../poly-video-loader/poly-video-loader.html">
+<link rel="import" href="../poly-search-input/poly-search-input.html">
 
 <polymer-element name="poly-video-search-config" attributes="videos" noscript>
   <template>
@@ -39,6 +40,7 @@
                        videos="{{videos}}"
                        on-videos-loaded="{{videosLoaded}}"></poly-video-loader>
     <div>
+        <poly-search-input></poly-search-input>
       <paper-input label="Search Videos..."
                    on-change="{{setSearch}}"
                    value="{{searchConfig.q}}"></paper-input>

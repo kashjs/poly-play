@@ -25,6 +25,7 @@
     "paper-elements": "Polymer/paper-elements#~0.3.5",
     "underscore": "~1.6.0",
     "font-roboto": "Polymer/font-roboto#~0.3.5",
-    "moment": "~2.8.2"
+    "moment": "~2.8.2",
+    "jquery": "~2.1.1"
   }
 }
