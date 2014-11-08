@@ -1,5 +1,5 @@
 ###Poly-Play is built using Polymer with the power of shadow DOM. Clean and simple video search.
-#### [DEMO](http://kashyap02004.github.io/poly-play/)
+#### [DEMO](http://kashjs.github.io/poly-play/)
 ---
 ####Please submit your feature requests, bugs or feedback right here on github
 ###Developers one time seup:
